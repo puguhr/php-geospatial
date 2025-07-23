@@ -1,3 +1,4 @@
+<?php
 class PHPGeospatial {
 	private $type;
 	private $properties = array();
@@ -99,16 +100,27 @@ class PHPGeospatial {
 		return $this->error;
 	}
 
-	function insertSql($tableName, $geometryFieldName = 'geometry', $addFields = array(), $method = 4)
+	function insertSql( $tableName, $geometryFieldName = 'geometry', $addFields = array(), $method = 4, $fieldsMapping = array() )
 	{
 		$result = array();
 		for($i=0; $i<sizeof($this->properties); $i++) {
 			$properties = array_merge($this->properties[$i], $addFields);
-			foreach($properties as $key=>$value)
+			foreach($properties as $key => $value)
 			{
 				$properties[$key] = "'".str_ireplace("'", "`", $value)."'";
 			}
-			$properties[$geometryFieldName]=$this->wkt[$i];
+			$properties[$geometryFieldName] = $this->wkt[$i];
+
+			foreach($fieldsMapping as $oldFieldName => $newFieldName)
+			{
+				if(!$newFieldName)
+					unset($properties[$oldFieldName]);
+				else
+				{
+					$properties[$newFieldName] = $properties[$oldFieldName];
+					unset($properties[$oldFieldName]);
+				}
+			}
 
 			$sql = "INSERT INTO `" . $tableName . "` (" . implode(', ' , array_keys($properties)) . ") VALUES (" . implode(', ', array_values($properties)) . ")";
 			
