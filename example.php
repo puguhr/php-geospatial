@@ -24,8 +24,12 @@ if (!empty($_FILES['userfile'])) {
   // the second is for geometry field name
   // the third is array for additional fields, for example array('updated_on'=>date('Y-m-d H:i:s'))
   // the fourth is for the the insert method : INSERT, INSERT_IGNORE, INSERT_UPDATE
+  // the fifth is for the the fields mapping, for example array('old_field_name'=>'new_field_name', 'field_to_removed'=>null)
 
-  echo "SQL : <pre>" . json_encode($obj->insertSql('tableName', 'geometry', array(), $obj::INSERT)) . "</pre> <br>";
-
+  $insertSql = $obj->insertSql('tableName', 'geometry', array(), $obj::INSERT, array());
+  echo "SQL : <pre>";
+  foreach ($insertSql as $sql)
+	  echo $sql . "\n";
+  echo "</pre>";
 }
 ?>
