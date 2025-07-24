@@ -52,7 +52,7 @@ class PHPGeospatial {
 									{
 										$L3 = array();
 										foreach($level_2 as $level_3) {
-											$L3[] = implode(' ',$level_3);
+											$L3[] = $level_3[1] . ' ' . $level_3[0];
 										}
 										$L2[] = "(".implode(',', $L3).")";
 									}
